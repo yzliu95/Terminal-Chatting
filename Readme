@@ -1,0 +1,46 @@
+/* CSci4061 F2018 Assignment 2
+* section: 001
+* date: 11/08/18
+* name: Yuanzhe Liu
+* id: yuanz002  5038957 */
+
+1. The purpose of your program
+  The purpose of this program is to chat.
+  The program contains two executables: a server for server side and a client for user side.
+  To use this program, one must execute ./server to establish a server
+ then user ./client <username> to join the server.
+
+2. A brief description of who did what on the lab
+  I coded everything other than the provided code. I am a one-man group.
+
+3. How to compile the program
+  Run make in the folder.
+
+4. How to use the program from the shell (syntax)
+  First, run
+./server
+  Once the server is established, run
+./client <username>
+
+5. What exactly your program does
+  client will connect with server via pipe and socket.
+  When the server receives a connection request,
+it will do condition checks to determine if a new connection is allowed.
+  If a new connection is allowed, it will fork a child process to handle the connection.
+  The child process will have two pipes connecting with server and two pipes connect with user.
+  The child process will keep polling from parent and user to check if there is incoming message,
+and if so, it will forward message from parent to user and vice versa.
+
+6. Any explicit assumptions you have made
+  Max message length is 256
+  Max user allowed is 10
+  User id cannot be "Notice"
+
+7. Your strategies for error handling
+  In every system call, there is a if to check if the call has succeed.
+  If not, if will print an error message on the screen.
+  Every error message has a code to help locate the problem.
+  The non-blocking read of the pipe will return 0 if the pipe is closed on one side.
+  If the user process terminated, child process will detect it and tell server to clean up the specific user then exit
+  If the parent process terminated, all child processes will detect and terminate
+  If the child process terminated, client will detect it and terminate and parent process will clean up the specific user.
